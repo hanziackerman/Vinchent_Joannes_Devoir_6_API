@@ -1,0 +1,45 @@
+<%- include('../layouts/main', { title: 'Catways' }) %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Liste des Catways</h1>
+    <a href="/catways/new" class="btn btn-primary">Nouveau Catway</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <% if (catways && catways.length > 0) { %>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Numéro</th>
+                            <th>Type</th>
+                            <th>État</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% catways.forEach(catway => { %>
+                            <tr>
+                                <td><%= catway.catwayNumber %></td>
+                                <td><%= catway.catwayType %></td>
+                                <td><%= catway.catwayState %></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="/catways/<%= catway.catwayNumber %>" class="btn btn-sm btn-info">Détails</a>
+                                        <a href="/catways/<%= catway.catwayNumber %>/edit" class="btn btn-sm btn-warning">Modifier</a>
+                                        <form action="/catways/<%= catway.catwayNumber %>?_method=DELETE" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce catway ?')">Supprimer</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <p class="text-center mb-0">Aucun catway trouvé.</p>
+        <% } %>
+    </div>
+</div> 

@@ -1,0 +1,66 @@
+<%- include('../layouts/main', { title: 'Nouvelle Réservation' }) %>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">Nouvelle Réservation - Catway <%= catway.catwayNumber %></h2>
+            </div>
+            <div class="card-body">
+                <form action="/catways/<%= catway.catwayNumber %>/reservations" method="POST">
+                    <div class="mb-3">
+                        <label for="clientName" class="form-label">Nom du client</label>
+                        <input type="text" class="form-control" id="clientName" name="clientName" required
+                            value="<%= locals.reservation ? reservation.clientName : '' %>"
+                            minlength="2">
+                        <div class="form-text">Le nom doit contenir au moins 2 caractères.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="boatName" class="form-label">Nom du bateau</label>
+                        <input type="text" class="form-control" id="boatName" name="boatName" required
+                            value="<%= locals.reservation ? reservation.boatName : '' %>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="startDate" class="form-label">Date de début</label>
+                        <input type="date" class="form-control" id="startDate" name="startDate" required
+                            value="<%= locals.reservation ? new Date(reservation.startDate).toISOString().split('T')[0] : '' %>"
+                            min="<%= new Date().toISOString().split('T')[0] %>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="endDate" class="form-label">Date de fin</label>
+                        <input type="date" class="form-control" id="endDate" name="endDate" required
+                            value="<%= locals.reservation ? new Date(reservation.endDate).toISOString().split('T')[0] : '' %>"
+                            min="<%= new Date().toISOString().split('T')[0] %>">
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Créer la réservation</button>
+                        <a href="/catways/<%= catway.catwayNumber %>/reservations" class="btn btn-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+
+    startDateInput.addEventListener('change', function() {
+        endDateInput.min = this.value;
+        if (endDateInput.value && endDateInput.value < this.value) {
+            endDateInput.value = this.value;
+        }
+    });
+
+    endDateInput.addEventListener('change', function() {
+        if (this.value < startDateInput.value) {
+            this.value = startDateInput.value;
+        }
+    });
+});</script> 

@@ -1,0 +1,71 @@
+<%- include('../layouts/main', { title: 'Réservations' }) %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Réservations du Catway <%= catway.catwayNumber %></h1>
+    <a href="/catways/<%= catway.catwayNumber %>/reservations/new" class="btn btn-primary">Nouvelle Réservation</a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Informations du Catway</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Numéro</dt>
+            <dd class="col-sm-9"><%= catway.catwayNumber %></dd>
+
+            <dt class="col-sm-3">Type</dt>
+            <dd class="col-sm-9"><%= catway.catwayType %></dd>
+
+            <dt class="col-sm-3">État</dt>
+            <dd class="col-sm-9"><%= catway.catwayState %></dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Liste des Réservations</h5>
+    </div>
+    <div class="card-body">
+        <% if (reservations && reservations.length > 0) { %>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Bateau</th>
+                            <th>Début</th>
+                            <th>Fin</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% reservations.forEach(reservation => { %>
+                            <tr>
+                                <td><%= reservation.clientName %></td>
+                                <td><%= reservation.boatName %></td>
+                                <td><%= new Date(reservation.startDate).toLocaleDateString('fr-FR') %></td>
+                                <td><%= new Date(reservation.endDate).toLocaleDateString('fr-FR') %></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="/catways/<%= catway.catwayNumber %>/reservations/<%= reservation._id %>" class="btn btn-sm btn-info">Détails</a>
+                                        <a href="/catways/<%= catway.catwayNumber %>/reservations/<%= reservation._id %>/edit" class="btn btn-sm btn-warning">Modifier</a>
+                                        <form action="/catways/<%= catway.catwayNumber %>/reservations/<%= reservation._id %>?_method=DELETE" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')">Supprimer</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <p class="text-center mb-0">Aucune réservation trouvée pour ce catway.</p>
+        <% } %>
+    </div>
+    <div class="card-footer">
+        <a href="/catways/<%= catway.catwayNumber %>" class="btn btn-secondary">Retour au catway</a>
+    </div>
+</div> 

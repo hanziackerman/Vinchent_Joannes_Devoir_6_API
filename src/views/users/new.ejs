@@ -1,0 +1,78 @@
+<%- include('../layouts/main', { title: 'Nouvel Utilisateur' }) %>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">Nouvel Utilisateur</h2>
+            </div>
+            <div class="card-body">
+                <form action="/users" method="POST" class="needs-validation" novalidate>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Nom d'utilisateur</label>
+                        <input type="text" class="form-control" id="username" name="username" required
+                            value="<%= locals.user ? user.username : '' %>"
+                            minlength="3" maxlength="50"
+                            pattern="^[a-zA-Z0-9_-]+$">
+                        <div class="form-text">
+                            Le nom d'utilisateur doit :
+                            <ul>
+                                <li>Contenir entre 3 et 50 caractères</li>
+                                <li>Ne contenir que des lettres, chiffres, tirets et underscores</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required
+                            value="<%= locals.user ? user.email : '' %>"
+                            pattern="^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$">
+                        <div class="form-text">
+                            L'adresse email doit être valide et unique
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" id="password" name="password" required
+                            minlength="8"
+                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]">
+                        <div class="form-text">
+                            Le mot de passe doit contenir au moins :
+                            <ul>
+                                <li>8 caractères</li>
+                                <li>Une lettre majuscule</li>
+                                <li>Une lettre minuscule</li>
+                                <li>Un chiffre</li>
+                                <li>Un caractère spécial (@$!%*?&)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Créer l'utilisateur</button>
+                        <a href="/users" class="btn btn-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Activation de la validation côté client
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+</script> 

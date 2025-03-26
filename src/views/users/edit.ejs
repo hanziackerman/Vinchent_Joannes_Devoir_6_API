@@ -1,0 +1,40 @@
+<%- include('../layouts/main', { title: 'Modifier l\'Utilisateur' }) %>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">Modifier l'Utilisateur</h2>
+            </div>
+            <div class="card-body">
+                <form action="/users/<%= user.email %>?_method=PUT" method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Nom d'utilisateur</label>
+                        <input type="text" class="form-control" id="username" name="username" required
+                            value="<%= user.username %>"
+                            minlength="3">
+                        <div class="form-text">Le nom d'utilisateur doit contenir au moins 3 caractères.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" value="<%= user.email %>" disabled>
+                        <div class="form-text">L'email ne peut pas être modifié.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Nouveau mot de passe</label>
+                        <input type="password" class="form-control" id="password" name="password"
+                            minlength="6">
+                        <div class="form-text">Laissez vide pour conserver le mot de passe actuel. Le nouveau mot de passe doit contenir au moins 6 caractères.</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                        <a href="/users" class="btn btn-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 

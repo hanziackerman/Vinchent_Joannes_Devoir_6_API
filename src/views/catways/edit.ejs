@@ -1,0 +1,35 @@
+<%- include('../layouts/main', { title: 'Modifier le Catway' }) %>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">Modifier le Catway <%= catway.catwayNumber %></h2>
+            </div>
+            <div class="card-body">
+                <form action="/catways/<%= catway.catwayNumber %>?_method=PUT" method="POST">
+                    <div class="mb-3">
+                        <label for="catwayNumber" class="form-label">Numéro du catway</label>
+                        <input type="text" class="form-control" id="catwayNumber" value="<%= catway.catwayNumber %>" disabled>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="catwayType" class="form-label">Type de catway</label>
+                        <input type="text" class="form-control" id="catwayType" value="<%= catway.catwayType %>" disabled>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="catwayState" class="form-label">État du catway</label>
+                        <textarea class="form-control" id="catwayState" name="catwayState" rows="3" required><%= catway.catwayState %></textarea>
+                        <div class="form-text">Seul l'état du catway peut être modifié.</div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                        <a href="/catways" class="btn btn-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 

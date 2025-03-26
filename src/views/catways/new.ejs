@@ -1,0 +1,39 @@
+<%- include('../layouts/main', { title: 'Nouveau Catway' }) %>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">Nouveau Catway</h2>
+            </div>
+            <div class="card-body">
+                <form action="/catways" method="POST">
+                    <div class="mb-3">
+                        <label for="catwayNumber" class="form-label">Numéro du catway</label>
+                        <input type="text" class="form-control" id="catwayNumber" name="catwayNumber" required
+                            value="<%= locals.catway ? catway.catwayNumber : '' %>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="catwayType" class="form-label">Type de catway</label>
+                        <select class="form-select" id="catwayType" name="catwayType" required>
+                            <option value="">Sélectionnez un type</option>
+                            <option value="long" <%= locals.catway && catway.catwayType === 'long' ? 'selected' : '' %>>Long</option>
+                            <option value="short" <%= locals.catway && catway.catwayType === 'short' ? 'selected' : '' %>>Court</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="catwayState" class="form-label">État du catway</label>
+                        <textarea class="form-control" id="catwayState" name="catwayState" rows="3" required><%= locals.catway ? catway.catwayState : '' %></textarea>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Créer le catway</button>
+                        <a href="/catways" class="btn btn-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 

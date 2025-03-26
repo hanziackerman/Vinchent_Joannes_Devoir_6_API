@@ -1,0 +1,43 @@
+<div class="text-center">
+    <h1 class="display-4 mb-4">Bienvenue au Port de Russell</h1>
+    <p class="lead mb-4">
+        Système de gestion des réservations de catways pour le port de plaisance.
+    </p>
+
+    <% if (!locals.user) { %>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Connexion</h2>
+                        <form action="/login" method="POST">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Mot de passe</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Se connecter</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } else { %>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Actions rapides</h2>
+                        <div class="d-grid gap-2">
+                            <a href="/dashboard" class="btn btn-primary">Accéder au tableau de bord</a>
+                            <a href="/api-docs" class="btn btn-secondary">Consulter la documentation API</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
+</div> 

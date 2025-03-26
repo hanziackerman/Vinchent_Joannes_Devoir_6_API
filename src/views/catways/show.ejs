@@ -1,0 +1,75 @@
+<%- include('../layouts/main', { title: 'Détails du Catway' }) %>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0">Catway <%= catway.catwayNumber %></h2>
+                    <div>
+                        <a href="/catways/<%= catway.catwayNumber %>/edit" class="btn btn-warning">Modifier</a>
+                        <form action="/catways/<%= catway.catwayNumber %>?_method=DELETE" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce catway ?')">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Informations générales</h5>
+                        <dl class="row">
+                            <dt class="col-sm-4">Numéro</dt>
+                            <dd class="col-sm-8"><%= catway.catwayNumber %></dd>
+
+                            <dt class="col-sm-4">Type</dt>
+                            <dd class="col-sm-8"><%= catway.catwayType %></dd>
+
+                            <dt class="col-sm-4">État</dt>
+                            <dd class="col-sm-8"><%= catway.catwayState %></dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <h5>Réservations</h5>
+                <% if (locals.reservations && reservations.length > 0) { %>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Bateau</th>
+                                    <th>Début</th>
+                                    <th>Fin</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% reservations.forEach(reservation => { %>
+                                    <tr>
+                                        <td><%= reservation.clientName %></td>
+                                        <td><%= reservation.boatName %></td>
+                                        <td><%= new Date(reservation.startDate).toLocaleDateString('fr-FR') %></td>
+                                        <td><%= new Date(reservation.endDate).toLocaleDateString('fr-FR') %></td>
+                                        <td>
+                                            <a href="/catways/<%= catway.catwayNumber %>/reservations/<%= reservation._id %>" class="btn btn-sm btn-info">Détails</a>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <p class="text-center mb-0">Aucune réservation pour ce catway.</p>
+                <% } %>
+
+                <div class="mt-4">
+                    <a href="/catways/<%= catway.catwayNumber %>/reservations/new" class="btn btn-primary">Nouvelle réservation</a>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="/catways" class="btn btn-secondary">Retour à la liste</a>
+            </div>
+        </div>
+    </div>
+</div> 

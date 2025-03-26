@@ -1,0 +1,71 @@
+<%- include('../layouts/main', { title: 'Détails de la Réservation' }) %>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0">Détails de la Réservation</h2>
+                    <div>
+                        <a href="/catways/<%= catway.catwayNumber %>/reservations/<%= reservation._id %>/edit" class="btn btn-warning">Modifier</a>
+                        <form action="/catways/<%= catway.catwayNumber %>/reservations/<%= reservation._id %>?_method=DELETE" method="POST" class="d-inline">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Informations du Catway</h5>
+                        <dl class="row">
+                            <dt class="col-sm-4">Numéro</dt>
+                            <dd class="col-sm-8"><%= catway.catwayNumber %></dd>
+
+                            <dt class="col-sm-4">Type</dt>
+                            <dd class="col-sm-8"><%= catway.catwayType %></dd>
+
+                            <dt class="col-sm-4">État</dt>
+                            <dd class="col-sm-8"><%= catway.catwayState %></dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Informations de la Réservation</h5>
+                        <dl class="row">
+                            <dt class="col-sm-4">Client</dt>
+                            <dd class="col-sm-8"><%= reservation.clientName %></dd>
+
+                            <dt class="col-sm-4">Bateau</dt>
+                            <dd class="col-sm-8"><%= reservation.boatName %></dd>
+
+                            <dt class="col-sm-4">Date de début</dt>
+                            <dd class="col-sm-8"><%= new Date(reservation.startDate).toLocaleDateString('fr-FR') %></dd>
+
+                            <dt class="col-sm-4">Date de fin</dt>
+                            <dd class="col-sm-8"><%= new Date(reservation.endDate).toLocaleDateString('fr-FR') %></dd>
+
+                            <dt class="col-sm-4">Durée</dt>
+                            <dd class="col-sm-8">
+                                <% 
+                                    const start = new Date(reservation.startDate);
+                                    const end = new Date(reservation.endDate);
+                                    const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+                                %>
+                                <%= days %> jour<%= days > 1 ? 's' : '' %>
+                            </dd>
+
+                            <dt class="col-sm-4">Créée le</dt>
+                            <dd class="col-sm-8"><%= new Date(reservation.createdAt).toLocaleString('fr-FR') %></dd>
+
+                            <dt class="col-sm-4">Mise à jour</dt>
+                            <dd class="col-sm-8"><%= new Date(reservation.updatedAt).toLocaleString('fr-FR') %></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="/catways/<%= catway.catwayNumber %>/reservations" class="btn btn-secondary">Retour à la liste</a>
+            </div>
+        </div>
+    </div>
+</div> 
