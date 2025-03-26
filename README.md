@@ -30,8 +30,8 @@ Application web de gestion des réservations de catways pour le port de plaisanc
 
 1. Cloner le dépôt :
 ```bash
-git clone [url-du-repo]
-cd port-russell-api
+git clone https://github.com/hanziackerman/Vinchent_Joannes_Devoir_6_API.git
+cd Vinchent_Joannes_Devoir_6_API
 ```
 
 2. Installer les dépendances :
@@ -39,9 +39,7 @@ cd port-russell-api
 npm install
 ```
 
-3. Configurer les variables d'environnement :
-- Copier le fichier `.env.example` en `.env`
-- Modifier les variables selon votre environnement
+3. Les variables d'environnement sont déjà configurées dans le fichier `.env`
 
 4. Alimenter la base de données :
 ```bash
