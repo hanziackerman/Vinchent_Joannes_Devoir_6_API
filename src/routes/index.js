@@ -48,7 +48,7 @@ router.get('/', indexController.showHomePage);
  *         description: Redirection vers le tableau de bord ou la page de connexion
  */
 router.get('/login', isNotAuthenticated, authController.showLoginPage);
-router.post('/login', isNotAuthenticated, authController.login);
+router.post('/login', authController.login);
 
 /**
  * @swagger

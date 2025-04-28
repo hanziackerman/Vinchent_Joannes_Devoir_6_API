@@ -1,34 +1,34 @@
 # Historique des Versions
 
-## Version 1.0.0 - 2024-03-20
+## Version 1.0.0 - 2024-03-19
 
 ### ✨ Fonctionnalités
-- Système d'authentification complet
-- Gestion des utilisateurs (CRUD)
-- Gestion des catways (CRUD)
-- Gestion des réservations (CRUD)
-- Documentation API avec Swagger
-- Interface utilisateur avec EJS et Bootstrap 5
-- Script de seeding pour les données initiales
+- Mise en place de l'authentification utilisateur
+- Gestion complète des utilisateurs (CRUD)
+- Gestion des catways avec leurs caractéristiques
+- Système de réservation des catways
+- Interface d'administration
+- Documentation de l'API
+
+### 🔧 Configuration
+- Configuration de l'application Express
+- Intégration de MongoDB avec Mongoose
+- Mise en place des middlewares de sécurité
+- Configuration du système de templates EJS
+
+### 🏗️ Architecture
+- Structure MVC (Modèles, Vues, Contrôleurs)
+- Organisation modulaire des routes
+- Middlewares d'authentification
+- Scripts de seeding pour les données initiales
 
 ### 🔒 Sécurité
-- Protection des routes avec authentification
-- Hashage des mots de passe avec bcrypt
-- Validation des données entrantes
-- Protection contre les injections NoSQL
-- Gestion sécurisée des sessions
-
-### 🛠 Technique
-- Architecture MVC
-- Base de données MongoDB
-- API RESTful
-- Pagination des résultats
-- Gestion des erreurs centralisée
-- Logging des événements
-- Tests unitaires et d'intégration
+- Hachage des mots de passe avec bcrypt
+- Protection CSRF
+- Sessions sécurisées
+- Validation des données
 
 ### 📚 Documentation
-- README complet
-- Documentation API détaillée
-- Guide de déploiement
-- Instructions d'installation 
+- Documentation complète des endpoints (ENDPOINTS.md)
+- Guide d'installation et de déploiement (README.md)
+- Documentation du code source 

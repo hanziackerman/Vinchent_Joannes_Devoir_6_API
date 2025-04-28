@@ -1,37 +1,28 @@
-# Port de Plaisance de Russell - Gestion des Catways
+# API de Gestion des Catways - Port de Russell
 
-Application web de gestion des réservations de catways pour le port de plaisance de Russell.
+Application web pour la gestion des réservations de catways au port de Russell.
 
-## Fonctionnalités
+## 🚀 Fonctionnalités
 
-- Authentification sécurisée
-- Gestion des catways (CRUD)
-- Gestion des réservations (CRUD)
+- Authentification des utilisateurs
 - Gestion des utilisateurs (CRUD)
-- Documentation API intégrée
-- Interface utilisateur intuitive
+- Gestion des catways et leurs caractéristiques
+- Système de réservation
+- Interface d'administration
+- API RESTful documentée
 
-## Technologies utilisées
+## 📋 Prérequis
 
-- Backend : Node.js avec Express
-- Base de données : MongoDB
-- Template Engine : EJS
-- Documentation API : Swagger
-- Frontend : Bootstrap 5
-- Sécurité : bcrypt, express-session
-
-## Prérequis
-
-- Node.js (v14 ou supérieur)
-- MongoDB (v4.4 ou supérieur)
+- Node.js (v18 ou supérieur)
+- MongoDB (v6 ou supérieur)
 - npm ou yarn
 
-## Installation
+## 🛠️ Installation
 
 1. Cloner le dépôt :
 ```bash
-git clone https://github.com/hanziackerman/Vinchent_Joannes_Devoir_6_API.git
-cd Vinchent_Joannes_Devoir_6_API
+git clone [URL_DU_REPO]
+cd [NOM_DU_REPO]
 ```
 
 2. Installer les dépendances :
@@ -39,90 +30,55 @@ cd Vinchent_Joannes_Devoir_6_API
 npm install
 ```
 
-3. Les variables d'environnement sont déjà configurées dans le fichier `.env`
+3. Configurer les variables d'environnement :
+```bash
+cp .env.example .env
+```
+Éditer le fichier `.env` avec vos paramètres :
+```
+PORT=3002
+MONGODB_URI=mongodb://localhost:27017/russell-marina
+SESSION_SECRET=votre_secret_ici
+```
 
-4. Alimenter la base de données :
+4. Peupler la base de données :
 ```bash
 npm run seed
 ```
 
-5. Démarrer l'application :
-```bash
-# Mode développement
-npm run dev
+## 🚀 Démarrage
 
-# Mode production
+1. Démarrer en mode développement :
+```bash
+npm run dev
+```
+
+2. Démarrer en mode production :
+```bash
 npm start
 ```
 
-## Structure du projet
+L'application sera accessible à l'adresse : `http://localhost:3002`
 
-```
-src/
-├── controllers/     # Logique métier
-├── models/         # Modèles Mongoose
-├── routes/         # Routes de l'API
-├── views/          # Templates EJS
-├── middlewares/    # Middlewares Express
-├── scripts/        # Scripts utilitaires
-└── app.js         # Point d'entrée
-```
+## 📚 Documentation
 
-## API Endpoints
+- [Documentation des endpoints](ENDPOINTS.md)
+- [Historique des versions](VERSION.md)
 
-### Authentification
-- `POST /login` : Connexion
-- `GET /logout` : Déconnexion
+## 🔒 Sécurité
 
-### Utilisateurs
-- `GET /users` : Liste des utilisateurs
-- `GET /users/:email` : Détails d'un utilisateur
-- `POST /users` : Création d'un utilisateur
-- `PUT /users/:email` : Modification d'un utilisateur
-- `DELETE /users/:email` : Suppression d'un utilisateur
-
-### Catways
-- `GET /catways` : Liste des catways
-- `GET /catways/:id` : Détails d'un catway
-- `POST /catways` : Création d'un catway
-- `PUT /catways/:id` : Modification d'un catway
-- `DELETE /catways/:id` : Suppression d'un catway
-
-### Réservations
-- `GET /catways/:id/reservations` : Liste des réservations d'un catway
-- `POST /catways/:id/reservations` : Création d'une réservation
-- `PUT /catways/:id/reservations/:reservationId` : Modification d'une réservation
-- `DELETE /catways/:id/reservations/:reservationId` : Suppression d'une réservation
-
-## Documentation
-
-La documentation complète de l'API est disponible à l'adresse `/api-docs` une fois l'application démarrée.
-
-## Sécurité
-
-- Authentification requise pour toutes les opérations
-- Mots de passe hashés avec bcrypt
-- Protection contre les injections NoSQL
-- Validation des données entrantes
+- Authentification requise pour tous les endpoints (sauf login)
+- Hachage des mots de passe avec bcrypt
+- Protection CSRF
+- Validation des données
 - Sessions sécurisées
 
-## Déploiement
+## 🧪 Tests
 
-L'application peut être déployée sur n'importe quelle plateforme supportant Node.js :
-- Heroku
-- DigitalOcean
-- AWS
-- Azure
-- etc.
+```bash
+npm test
+```
 
-## Contribution
+## 📝 Licence
 
-1. Fork le projet
-2. Créer une branche pour votre fonctionnalité
-3. Commiter vos changements
-4. Pousser vers la branche
-5. Ouvrir une Pull Request
-
-## Licence
-
-MIT 
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails. 

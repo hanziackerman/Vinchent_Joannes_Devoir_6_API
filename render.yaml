@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: port-russell-api
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: PORT
+        value: 3002
+    healthCheckPath: /
+    autoDeploy: true 

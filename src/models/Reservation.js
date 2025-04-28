@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 /**
  * Schéma réservation
  * @typedef {Object} ReservationSchema
+ * @property {ObjectId} user - Référence vers l'utilisateur
  * @property {string} catwayNumber - Numéro du catway réservé
  * @property {string} clientName - Nom du client
  * @property {string} boatName - Nom du bateau
@@ -14,10 +15,15 @@ const mongoose = require('mongoose');
  * @property {Date} endDate - Date de fin
  */
 const reservationSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     catwayNumber: {
         type: String,
         required: [true, 'Le numéro du catway est requis'],
-        ref: 'Catway'
+        trim: true
     },
     clientName: {
         type: String,

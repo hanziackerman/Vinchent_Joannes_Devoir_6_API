@@ -10,104 +10,67 @@ const Catway = require('../models/Catway');
 
 /**
  * @swagger
- * /catways/{id}/reservations:
+ * /reservations:
  *   get:
- *     summary: Liste des réservations d'un catway
- *     description: Récupère la liste des réservations pour un catway spécifique
+ *     summary: Liste des réservations
+ *     description: Récupère la liste de toutes les réservations
  *     security:
  *       - sessionAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
  *     responses:
  *       200:
  *         description: Liste des réservations récupérée avec succès
  */
-router.get('/:id/reservations', isAuthenticated, async (req, res) => {
+router.get('/', isAuthenticated, async (req, res) => {
     try {
-        const catway = await Catway.findOne({ catwayNumber: req.params.id });
-        if (!catway) {
-            return res.status(404).render('error', {
-                title: 'Erreur',
-                message: 'Catway non trouvé'
-            });
-        }
-
-        const reservations = await Reservation.find({ catwayNumber: req.params.id })
-            .sort({ startDate: 1 });
+        const reservations = await Reservation.find()
+            .populate('user', 'username email')
+            .sort('-startDate');
 
         res.render('reservations/index', {
-            title: `Réservations du catway ${catway.catwayNumber}`,
-            catway,
+            title: 'Réservations',
             reservations
         });
     } catch (error) {
         console.error('Erreur lors de la récupération des réservations:', error);
-        res.status(500).render('error', {
-            title: 'Erreur',
-            message: 'Une erreur est survenue lors de la récupération des réservations'
-        });
+        req.session.error = 'Une erreur est survenue lors de la récupération des réservations';
+        res.redirect('/dashboard');
     }
 });
 
 /**
  * @swagger
- * /catways/{id}/reservations/new:
+ * /reservations/new:
  *   get:
  *     summary: Formulaire de création
  *     description: Affiche le formulaire de création d'une réservation
  *     security:
  *       - sessionAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
  *     responses:
  *       200:
  *         description: Formulaire affiché avec succès
  */
-router.get('/:id/reservations/new', isAuthenticated, async (req, res) => {
+router.get('/new', isAuthenticated, async (req, res) => {
     try {
-        const catway = await Catway.findOne({ catwayNumber: req.params.id });
-        if (!catway) {
-            return res.status(404).render('error', {
-                title: 'Erreur',
-                message: 'Catway non trouvé'
-            });
-        }
-
+        const catways = await Catway.find({ catwayState: 'Disponible' }).sort('catwayNumber');
         res.render('reservations/new', {
             title: 'Nouvelle réservation',
-            catway
+            catways
         });
     } catch (error) {
-        console.error('Erreur lors de l\'affichage du formulaire:', error);
-        res.status(500).render('error', {
-            title: 'Erreur',
-            message: 'Une erreur est survenue'
-        });
+        console.error('Erreur lors du chargement du formulaire:', error);
+        req.session.error = 'Une erreur est survenue lors du chargement du formulaire';
+        res.redirect('/reservations');
     }
 });
 
 /**
  * @swagger
- * /catways/{id}/reservations:
+ * /reservations:
  *   post:
  *     summary: Création d'une réservation
- *     description: Crée une nouvelle réservation pour un catway
+ *     description: Crée une nouvelle réservation
  *     security:
  *       - sessionAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
  *     requestBody:
  *       required: true
  *       content:
@@ -115,6 +78,8 @@ router.get('/:id/reservations/new', isAuthenticated, async (req, res) => {
  *           schema:
  *             type: object
  *             properties:
+ *               catwayNumber:
+ *                 type: string
  *               clientName:
  *                 type: string
  *               boatName:
@@ -125,34 +90,23 @@ router.get('/:id/reservations/new', isAuthenticated, async (req, res) => {
  *               endDate:
  *                 type: string
  *                 format: date
- *     responses:
- *       302:
- *         description: Redirection vers la liste des réservations
  */
-router.post('/:id/reservations', isAuthenticated, async (req, res) => {
+router.post('/', isAuthenticated, async (req, res) => {
     try {
-        const catway = await Catway.findOne({ catwayNumber: req.params.id });
-        if (!catway) {
-            return res.status(404).render('error', {
-                title: 'Erreur',
-                message: 'Catway non trouvé'
-            });
-        }
-
         const reservation = new Reservation({
             ...req.body,
-            catwayNumber: req.params.id
+            user: req.user._id
         });
-
         await reservation.save();
         req.session.success = 'Réservation créée avec succès';
-        res.redirect(`/catways/${req.params.id}/reservations`);
+        res.redirect('/reservations');
     } catch (error) {
         console.error('Erreur lors de la création de la réservation:', error);
+        const catways = await Catway.find({ catwayState: 'Disponible' }).sort('catwayNumber');
         res.render('reservations/new', {
             title: 'Nouvelle réservation',
-            catway,
             error: error.message,
+            catways,
             reservation: req.body
         });
     }
@@ -160,7 +114,7 @@ router.post('/:id/reservations', isAuthenticated, async (req, res) => {
 
 /**
  * @swagger
- * /catways/{id}/reservations/{reservationId}:
+ * /reservations/{id}:
  *   get:
  *     summary: Détails d'une réservation
  *     description: Récupère les détails d'une réservation spécifique
@@ -172,33 +126,19 @@ router.post('/:id/reservations', isAuthenticated, async (req, res) => {
  *         required: true
  *         schema:
  *           type: string
- *       - in: path
- *         name: reservationId
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Détails de la réservation récupérés avec succès
  */
-router.get('/:id/reservations/:reservationId', isAuthenticated, async (req, res) => {
+router.get('/:id', isAuthenticated, async (req, res) => {
     try {
-        const reservation = await Reservation.findById(req.params.reservationId);
-        if (!reservation || reservation.catwayNumber !== req.params.id) {
-            return res.status(404).render('error', {
-                title: 'Erreur',
-                message: 'Réservation non trouvée'
-            });
+        const reservation = await Reservation.findById(req.params.id)
+            .populate('user', 'username email');
+        
+        if (!reservation) {
+            req.session.error = 'Réservation non trouvée';
+            return res.redirect('/reservations');
         }
 
-        const catway = await Catway.findOne({ catwayNumber: req.params.id });
-        if (!catway) {
-            return res.status(404).render('error', {
-                title: 'Erreur',
-                message: 'Catway non trouvé'
-            });
-        }
-
+        const catway = await Catway.findOne({ catwayNumber: reservation.catwayNumber });
+        
         res.render('reservations/show', {
             title: 'Détails de la réservation',
             reservation,
@@ -206,16 +146,14 @@ router.get('/:id/reservations/:reservationId', isAuthenticated, async (req, res)
         });
     } catch (error) {
         console.error('Erreur lors de la récupération de la réservation:', error);
-        res.status(500).render('error', {
-            title: 'Erreur',
-            message: 'Une erreur est survenue'
-        });
+        req.session.error = 'Une erreur est survenue lors de la récupération de la réservation';
+        res.redirect('/reservations');
     }
 });
 
 /**
  * @swagger
- * /catways/{id}/reservations/{reservationId}/edit:
+ * /reservations/{id}/edit:
  *   get:
  *     summary: Formulaire de modification
  *     description: Affiche le formulaire de modification d'une réservation
@@ -227,50 +165,32 @@ router.get('/:id/reservations/:reservationId', isAuthenticated, async (req, res)
  *         required: true
  *         schema:
  *           type: string
- *       - in: path
- *         name: reservationId
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Formulaire affiché avec succès
  */
-router.get('/:id/reservations/:reservationId/edit', isAuthenticated, async (req, res) => {
+router.get('/:id/edit', isAuthenticated, async (req, res) => {
     try {
-        const reservation = await Reservation.findById(req.params.reservationId);
-        if (!reservation || reservation.catwayNumber !== req.params.id) {
-            return res.status(404).render('error', {
-                title: 'Erreur',
-                message: 'Réservation non trouvée'
-            });
+        const reservation = await Reservation.findById(req.params.id);
+        if (!reservation) {
+            req.session.error = 'Réservation non trouvée';
+            return res.redirect('/reservations');
         }
 
-        const catway = await Catway.findOne({ catwayNumber: req.params.id });
-        if (!catway) {
-            return res.status(404).render('error', {
-                title: 'Erreur',
-                message: 'Catway non trouvé'
-            });
-        }
-
+        const catways = await Catway.find().sort('catwayNumber');
+        
         res.render('reservations/edit', {
             title: 'Modifier la réservation',
             reservation,
-            catway
+            catways
         });
     } catch (error) {
         console.error('Erreur lors de la récupération de la réservation:', error);
-        res.status(500).render('error', {
-            title: 'Erreur',
-            message: 'Une erreur est survenue'
-        });
+        req.session.error = 'Une erreur est survenue lors de la récupération de la réservation';
+        res.redirect('/reservations');
     }
 });
 
 /**
  * @swagger
- * /catways/{id}/reservations/{reservationId}:
+ * /reservations/{id}:
  *   put:
  *     summary: Modification d'une réservation
  *     description: Modifie une réservation existante
@@ -282,60 +202,35 @@ router.get('/:id/reservations/:reservationId/edit', isAuthenticated, async (req,
  *         required: true
  *         schema:
  *           type: string
- *       - in: path
- *         name: reservationId
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/x-www-form-urlencoded:
- *           schema:
- *             type: object
- *             properties:
- *               clientName:
- *                 type: string
- *               boatName:
- *                 type: string
- *               startDate:
- *                 type: string
- *                 format: date
- *               endDate:
- *                 type: string
- *                 format: date
- *     responses:
- *       302:
- *         description: Redirection vers la liste des réservations
  */
-router.put('/:id/reservations/:reservationId', isAuthenticated, async (req, res) => {
+router.put('/:id', isAuthenticated, async (req, res) => {
     try {
-        const reservation = await Reservation.findById(req.params.reservationId);
-        if (!reservation || reservation.catwayNumber !== req.params.id) {
-            return res.status(404).render('error', {
-                title: 'Erreur',
-                message: 'Réservation non trouvée'
-            });
+        const reservation = await Reservation.findById(req.params.id);
+        if (!reservation) {
+            req.session.error = 'Réservation non trouvée';
+            return res.redirect('/reservations');
         }
 
         Object.assign(reservation, req.body);
         await reservation.save();
+        
         req.session.success = 'Réservation modifiée avec succès';
-        res.redirect(`/catways/${req.params.id}/reservations`);
+        res.redirect('/reservations');
     } catch (error) {
         console.error('Erreur lors de la modification de la réservation:', error);
+        const catways = await Catway.find().sort('catwayNumber');
         res.render('reservations/edit', {
             title: 'Modifier la réservation',
             error: error.message,
-            reservation: { ...req.body, _id: req.params.reservationId },
-            catway: { catwayNumber: req.params.id }
+            reservation: { ...req.body, _id: req.params.id },
+            catways
         });
     }
 });
 
 /**
  * @swagger
- * /catways/{id}/reservations/{reservationId}:
+ * /reservations/{id}:
  *   delete:
  *     summary: Suppression d'une réservation
  *     description: Supprime une réservation existante
@@ -347,32 +242,16 @@ router.put('/:id/reservations/:reservationId', isAuthenticated, async (req, res)
  *         required: true
  *         schema:
  *           type: string
- *       - in: path
- *         name: reservationId
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       302:
- *         description: Redirection vers la liste des réservations
  */
-router.delete('/:id/reservations/:reservationId', isAuthenticated, async (req, res) => {
+router.delete('/:id', isAuthenticated, async (req, res) => {
     try {
-        const reservation = await Reservation.findById(req.params.reservationId);
-        if (!reservation || reservation.catwayNumber !== req.params.id) {
-            return res.status(404).render('error', {
-                title: 'Erreur',
-                message: 'Réservation non trouvée'
-            });
-        }
-
-        await reservation.remove();
+        await Reservation.findByIdAndDelete(req.params.id);
         req.session.success = 'Réservation supprimée avec succès';
-        res.redirect(`/catways/${req.params.id}/reservations`);
+        res.redirect('/reservations');
     } catch (error) {
         console.error('Erreur lors de la suppression de la réservation:', error);
         req.session.error = 'Une erreur est survenue lors de la suppression de la réservation';
-        res.redirect(`/catways/${req.params.id}/reservations`);
+        res.redirect('/reservations');
     }
 });
 

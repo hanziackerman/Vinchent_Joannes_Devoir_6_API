@@ -1,71 +1,98 @@
-<%- include('../layouts/main', { title: 'Détails de la Réservation' }) %>
+<%- include('../partials/header') %>
 
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h2 class="mb-0">Détails de la Réservation</h2>
-                    <div>
-                        <a href="/catways/<%= catway.catwayNumber %>/reservations/<%= reservation._id %>/edit" class="btn btn-warning">Modifier</a>
-                        <form action="/catways/<%= catway.catwayNumber %>/reservations/<%= reservation._id %>?_method=DELETE" method="POST" class="d-inline">
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')">Supprimer</button>
-                        </form>
-                    </div>
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-gray-800">Détails de la Réservation</h2>
+                <div class="space-x-2">
+                    <form action="/reservations/<%= reservation._id %>" method="POST" class="inline"
+                        onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                            Supprimer
+                        </button>
+                    </form>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <h5>Informations du Catway</h5>
-                        <dl class="row">
-                            <dt class="col-sm-4">Numéro</dt>
-                            <dd class="col-sm-8"><%= catway.catwayNumber %></dd>
-
-                            <dt class="col-sm-4">Type</dt>
-                            <dd class="col-sm-8"><%= catway.catwayType %></dd>
-
-                            <dt class="col-sm-4">État</dt>
-                            <dd class="col-sm-8"><%= catway.catwayState %></dd>
-                        </dl>
-                    </div>
-                    <div class="col-md-6">
-                        <h5>Informations de la Réservation</h5>
-                        <dl class="row">
-                            <dt class="col-sm-4">Client</dt>
-                            <dd class="col-sm-8"><%= reservation.clientName %></dd>
-
-                            <dt class="col-sm-4">Bateau</dt>
-                            <dd class="col-sm-8"><%= reservation.boatName %></dd>
-
-                            <dt class="col-sm-4">Date de début</dt>
-                            <dd class="col-sm-8"><%= new Date(reservation.startDate).toLocaleDateString('fr-FR') %></dd>
-
-                            <dt class="col-sm-4">Date de fin</dt>
-                            <dd class="col-sm-8"><%= new Date(reservation.endDate).toLocaleDateString('fr-FR') %></dd>
-
-                            <dt class="col-sm-4">Durée</dt>
-                            <dd class="col-sm-8">
-                                <% 
-                                    const start = new Date(reservation.startDate);
-                                    const end = new Date(reservation.endDate);
-                                    const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
-                                %>
-                                <%= days %> jour<%= days > 1 ? 's' : '' %>
-                            </dd>
-
-                            <dt class="col-sm-4">Créée le</dt>
-                            <dd class="col-sm-8"><%= new Date(reservation.createdAt).toLocaleString('fr-FR') %></dd>
-
-                            <dt class="col-sm-4">Mise à jour</dt>
-                            <dd class="col-sm-8"><%= new Date(reservation.updatedAt).toLocaleString('fr-FR') %></dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer">
-                <a href="/catways/<%= catway.catwayNumber %>/reservations" class="btn btn-secondary">Retour à la liste</a>
             </div>
         </div>
+        
+        <div class="p-6">
+            <dl class="grid grid-cols-1 gap-y-6">
+                <div class="grid grid-cols-3 gap-4">
+                    <dt class="text-sm font-medium text-gray-500">Client</dt>
+                    <dd class="text-sm text-gray-900 col-span-2"><%= reservation.clientName %></dd>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4">
+                    <dt class="text-sm font-medium text-gray-500">Bateau</dt>
+                    <dd class="text-sm text-gray-900 col-span-2"><%= reservation.boatName %></dd>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4">
+                    <dt class="text-sm font-medium text-gray-500">Catway</dt>
+                    <dd class="text-sm text-gray-900 col-span-2">N°<%= reservation.catwayNumber %></dd>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4">
+                    <dt class="text-sm font-medium text-gray-500">Période</dt>
+                    <dd class="text-sm text-gray-900 col-span-2">
+                        Du <%= new Date(reservation.startDate).toLocaleDateString('fr-FR') %>
+                        au <%= new Date(reservation.endDate).toLocaleDateString('fr-FR') %>
+                    </dd>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4">
+                    <dt class="text-sm font-medium text-gray-500">Statut</dt>
+                    <dd class="text-sm text-gray-900 col-span-2">
+                        <% 
+                            const now = new Date();
+                            const start = new Date(reservation.startDate);
+                            const end = new Date(reservation.endDate);
+                            let status = '';
+                            let statusClass = '';
+                            
+                            if (now < start) {
+                                status = 'À venir';
+                                statusClass = 'bg-yellow-100 text-yellow-800';
+                            } else if (now > end) {
+                                status = 'Terminée';
+                                statusClass = 'bg-gray-100 text-gray-800';
+                            } else {
+                                status = 'En cours';
+                                statusClass = 'bg-green-100 text-green-800';
+                            }
+                        %>
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= statusClass %>">
+                            <%= status %>
+                        </span>
+                    </dd>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4">
+                    <dt class="text-sm font-medium text-gray-500">Créée le</dt>
+                    <dd class="text-sm text-gray-900 col-span-2"><%= new Date(reservation.createdAt).toLocaleString('fr-FR') %></dd>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4">
+                    <dt class="text-sm font-medium text-gray-500">Dernière mise à jour</dt>
+                    <dd class="text-sm text-gray-900 col-span-2"><%= new Date(reservation.updatedAt).toLocaleString('fr-FR') %></dd>
+                </div>
+            </dl>
+        </div>
+        
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+            <a href="/reservations" class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Retour à la liste
+            </a>
+        </div>
     </div>
-</div> 
+</div>
+
+<%- include('../partials/footer') %> 

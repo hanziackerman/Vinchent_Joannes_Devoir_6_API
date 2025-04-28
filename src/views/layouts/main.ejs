@@ -6,47 +6,33 @@
     <title><%= typeof title !== 'undefined' ? title + ' - Port de Russell' : 'Port de Russell' %></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/css/style.css">
     <%- typeof extraStyles !== 'undefined' ? extraStyles : '' %>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="/">Port de Russell</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+<body class="bg-gray-100">
+    <nav class="bg-blue-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <a href="/" class="text-white text-xl font-bold">Port de Russell</a>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <% if (locals.user) { %>
+                            <a href="/dashboard" class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium">Tableau de bord</a>
+                            <a href="/catways" class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium">Catways</a>
+                            <a href="/users" class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium">Utilisateurs</a>
+                        <% } %>
+                        <a href="/api-docs" class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium">Documentation API</a>
+                    </div>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
                     <% if (locals.user) { %>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/dashboard">Tableau de bord</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/catways">Catways</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/users">Utilisateurs</a>
-                        </li>
+                        <span class="text-white text-sm mr-4">Bienvenue, <%= user.username %></span>
+                        <a href="/logout" class="text-white hover:text-gray-200 text-sm font-medium">Déconnexion</a>
                     <% } %>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/api-docs">Documentation API</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <% if (locals.user) { %>
-                        <li class="nav-item">
-                            <span class="nav-link">Bienvenue, <%= user.username %></span>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/logout">Déconnexion</a>
-                        </li>
-                    <% } else { %>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/login">Connexion</a>
-                        </li>
-                    <% } %>
-                </ul>
+                </div>
             </div>
         </div>
     </nav>
@@ -65,9 +51,11 @@
         <%- body %>
     </main>
 
-    <footer class="bg-light py-3 mt-5">
-        <div class="container text-center">
-            <p class="mb-0">&copy; <%= new Date().getFullYear() %> Port de Russell. Tous droits réservés.</p>
+    <footer class="bg-white shadow mt-8">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-sm text-gray-500">
+                © <%= new Date().getFullYear() %> Port de Russell. Tous droits réservés.
+            </p>
         </div>
     </footer>
 

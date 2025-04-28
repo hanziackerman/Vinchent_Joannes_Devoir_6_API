@@ -11,29 +11,28 @@
   "password": "string"
 }
 ```
-- **Réponse** : 
-  - 200 : Connexion réussie
-  - 401 : Identifiants invalides
-  - 400 : Données manquantes
+- **Réponse** : Redirige vers le dashboard en cas de succès
 
 ### GET /logout
-- **Description** : Déconnecte l'utilisateur actuel
+- **Description** : Déconnecte l'utilisateur
 - **Authentification** : Requise
-- **Réponse** : 
-  - 200 : Déconnexion réussie
-  - 401 : Non authentifié
+- **Réponse** : Redirige vers la page de connexion
 
 ## 👥 Gestion des Utilisateurs
 
 ### GET /users
-- **Description** : Liste tous les utilisateurs
+- **Description** : Récupère la liste des utilisateurs
 - **Authentification** : Requise
-- **Paramètres de requête** :
-  - `page` (optionnel) : Numéro de page
-  - `limit` (optionnel) : Nombre d'éléments par page
 - **Réponse** :
-  - 200 : Liste des utilisateurs
-  - 401 : Non authentifié
+```json
+[
+  {
+    "email": "string",
+    "username": "string",
+    "role": "string"
+  }
+]
+```
 
 ### GET /users/:email
 - **Description** : Récupère les détails d'un utilisateur
@@ -41,9 +40,13 @@
 - **Paramètres** :
   - `email` : Email de l'utilisateur
 - **Réponse** :
-  - 200 : Détails de l'utilisateur
-  - 404 : Utilisateur non trouvé
-  - 401 : Non authentifié
+```json
+{
+  "email": "string",
+  "username": "string",
+  "role": "string"
+}
+```
 
 ### POST /users
 - **Description** : Crée un nouvel utilisateur
@@ -51,17 +54,13 @@
 - **Corps de la requête** :
 ```json
 {
-  "username": "string",
   "email": "string",
+  "username": "string",
   "password": "string",
   "role": "string"
 }
 ```
-- **Réponse** :
-  - 201 : Utilisateur créé
-  - 400 : Données invalides
-  - 409 : Email déjà utilisé
-  - 401 : Non authentifié
+- **Réponse** : L'utilisateur créé
 
 ### PUT /users/:email
 - **Description** : Modifie un utilisateur existant
@@ -72,49 +71,52 @@
 ```json
 {
   "username": "string",
-  "email": "string",
   "password": "string",
   "role": "string"
 }
 ```
-- **Réponse** :
-  - 200 : Utilisateur modifié
-  - 404 : Utilisateur non trouvé
-  - 400 : Données invalides
-  - 401 : Non authentifié
+- **Réponse** : L'utilisateur modifié
 
 ### DELETE /users/:email
 - **Description** : Supprime un utilisateur
 - **Authentification** : Requise
 - **Paramètres** :
   - `email` : Email de l'utilisateur
-- **Réponse** :
-  - 200 : Utilisateur supprimé
-  - 404 : Utilisateur non trouvé
-  - 401 : Non authentifié
+- **Réponse** : 204 No Content
 
 ## 🚤 Gestion des Catways
 
 ### GET /catways
-- **Description** : Liste tous les catways
+- **Description** : Récupère la liste des catways
 - **Authentification** : Requise
-- **Paramètres de requête** :
-  - `page` (optionnel) : Numéro de page
-  - `limit` (optionnel) : Nombre d'éléments par page
-  - `available` (optionnel) : Filtrer par disponibilité
 - **Réponse** :
-  - 200 : Liste des catways
-  - 401 : Non authentifié
+```json
+[
+  {
+    "id": "string",
+    "number": "string",
+    "length": "number",
+    "width": "number",
+    "draft": "number"
+  }
+]
+```
 
 ### GET /catways/:id
 - **Description** : Récupère les détails d'un catway
 - **Authentification** : Requise
 - **Paramètres** :
-  - `id` : Identifiant du catway
+  - `id` : ID du catway
 - **Réponse** :
-  - 200 : Détails du catway
-  - 404 : Catway non trouvé
-  - 401 : Non authentifié
+```json
+{
+  "id": "string",
+  "number": "string",
+  "length": "number",
+  "width": "number",
+  "draft": "number"
+}
+```
 
 ### POST /catways
 - **Description** : Crée un nouveau catway
@@ -125,111 +127,89 @@
   "number": "string",
   "length": "number",
   "width": "number",
-  "price": "number"
+  "draft": "number"
 }
 ```
-- **Réponse** :
-  - 201 : Catway créé
-  - 400 : Données invalides
-  - 401 : Non authentifié
+- **Réponse** : Le catway créé
 
 ### PUT /catways/:id
 - **Description** : Modifie un catway existant
 - **Authentification** : Requise
 - **Paramètres** :
-  - `id` : Identifiant du catway
+  - `id` : ID du catway
 - **Corps de la requête** :
 ```json
 {
   "number": "string",
   "length": "number",
   "width": "number",
-  "price": "number"
+  "draft": "number"
 }
 ```
-- **Réponse** :
-  - 200 : Catway modifié
-  - 404 : Catway non trouvé
-  - 400 : Données invalides
-  - 401 : Non authentifié
+- **Réponse** : Le catway modifié
 
 ### DELETE /catways/:id
 - **Description** : Supprime un catway
 - **Authentification** : Requise
 - **Paramètres** :
-  - `id` : Identifiant du catway
-- **Réponse** :
-  - 200 : Catway supprimé
-  - 404 : Catway non trouvé
-  - 401 : Non authentifié
+  - `id` : ID du catway
+- **Réponse** : 204 No Content
 
 ## 📅 Gestion des Réservations
 
 ### GET /catways/:id/reservations
-- **Description** : Liste les réservations d'un catway
+- **Description** : Récupère les réservations d'un catway
 - **Authentification** : Requise
 - **Paramètres** :
-  - `id` : Identifiant du catway
-- **Paramètres de requête** :
-  - `page` (optionnel) : Numéro de page
-  - `limit` (optionnel) : Nombre d'éléments par page
-  - `startDate` (optionnel) : Date de début
-  - `endDate` (optionnel) : Date de fin
+  - `id` : ID du catway
 - **Réponse** :
-  - 200 : Liste des réservations
-  - 404 : Catway non trouvé
-  - 401 : Non authentifié
+```json
+[
+  {
+    "id": "string",
+    "catwayId": "string",
+    "userId": "string",
+    "startDate": "date",
+    "endDate": "date",
+    "status": "string"
+  }
+]
+```
 
 ### POST /catways/:id/reservations
-- **Description** : Crée une nouvelle réservation
+- **Description** : Crée une nouvelle réservation pour un catway
 - **Authentification** : Requise
 - **Paramètres** :
-  - `id` : Identifiant du catway
+  - `id` : ID du catway
 - **Corps de la requête** :
 ```json
 {
   "startDate": "date",
-  "endDate": "date",
-  "userId": "string",
-  "boatName": "string",
-  "boatLength": "number"
+  "endDate": "date"
 }
 ```
-- **Réponse** :
-  - 201 : Réservation créée
-  - 400 : Données invalides ou dates non disponibles
-  - 404 : Catway non trouvé
-  - 401 : Non authentifié
+- **Réponse** : La réservation créée
 
 ### PUT /catways/:id/reservations/:reservationId
 - **Description** : Modifie une réservation existante
 - **Authentification** : Requise
 - **Paramètres** :
-  - `id` : Identifiant du catway
-  - `reservationId` : Identifiant de la réservation
+  - `id` : ID du catway
+  - `reservationId` : ID de la réservation
 - **Corps de la requête** :
 ```json
 {
   "startDate": "date",
   "endDate": "date",
-  "userId": "string",
-  "boatName": "string",
-  "boatLength": "number"
+  "status": "string"
 }
 ```
-- **Réponse** :
-  - 200 : Réservation modifiée
-  - 400 : Données invalides ou dates non disponibles
-  - 404 : Catway ou réservation non trouvé
-  - 401 : Non authentifié
+- **Réponse** : La réservation modifiée
 
 ### DELETE /catways/:id/reservations/:reservationId
 - **Description** : Supprime une réservation
 - **Authentification** : Requise
 - **Paramètres** :
-  - `id` : Identifiant du catway
-  - `reservationId` : Identifiant de la réservation
-- **Réponse** :
-  - 200 : Réservation supprimée
-  - 404 : Catway ou réservation non trouvé
-  - 401 : Non authentifié 
+  - `id` : ID du catway
+  - `reservationId` : ID de la réservation
+- **Réponse** : 204 No Content 

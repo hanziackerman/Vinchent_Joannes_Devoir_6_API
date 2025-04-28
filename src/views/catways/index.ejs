@@ -1,35 +1,63 @@
-<%- include('../layouts/main', { title: 'Catways' }) %>
+<%- include('../partials/header') %>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Liste des Catways</h1>
-    <a href="/catways/new" class="btn btn-primary">Nouveau Catway</a>
-</div>
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">Liste des Catways</h1>
+        <a href="/catways/new" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors">
+            <span class="flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Nouveau Catway
+            </span>
+        </a>
+    </div>
 
-<div class="card">
-    <div class="card-body">
+    <div class="bg-white rounded-lg shadow overflow-hidden">
         <% if (catways && catways.length > 0) { %>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <th>Numéro</th>
-                            <th>Type</th>
-                            <th>État</th>
-                            <th>Actions</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Numéro</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">État</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="bg-white divide-y divide-gray-200">
                         <% catways.forEach(catway => { %>
-                            <tr>
-                                <td><%= catway.catwayNumber %></td>
-                                <td><%= catway.catwayType %></td>
-                                <td><%= catway.catwayState %></td>
-                                <td>
-                                    <div class="btn-group">
-                                        <a href="/catways/<%= catway.catwayNumber %>" class="btn btn-sm btn-info">Détails</a>
-                                        <a href="/catways/<%= catway.catwayNumber %>/edit" class="btn btn-sm btn-warning">Modifier</a>
-                                        <form action="/catways/<%= catway.catwayNumber %>?_method=DELETE" method="POST" class="d-inline">
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce catway ?')">Supprimer</button>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <%= catway.catwayNumber %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                        <%= catway.catwayType === 'long' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+                                        <%= catway.catwayType === 'long' ? 'Long' : 'Court' %>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <%= catway.catwayState %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2">
+                                        <a href="/catways/<%= catway.catwayNumber %>" 
+                                           class="text-blue-600 hover:text-blue-900 transition-colors">
+                                            Détails
+                                        </a>
+                                        <a href="/catways/<%= catway.catwayNumber %>/edit" 
+                                           class="text-yellow-600 hover:text-yellow-900 transition-colors">
+                                            Modifier
+                                        </a>
+                                        <form action="/catways/<%= catway.catwayNumber %>?_method=DELETE" 
+                                              method="POST" 
+                                              class="inline"
+                                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce catway ?')">
+                                            <button type="submit" 
+                                                    class="text-red-600 hover:text-red-900 transition-colors">
+                                                Supprimer
+                                            </button>
                                         </form>
                                     </div>
                                 </td>
@@ -39,7 +67,11 @@
                 </table>
             </div>
         <% } else { %>
-            <p class="text-center mb-0">Aucun catway trouvé.</p>
+            <div class="p-6 text-center text-gray-500">
+                Aucun catway trouvé.
+            </div>
         <% } %>
     </div>
-</div> 
+</div>
+
+<%- include('../partials/footer') %> 

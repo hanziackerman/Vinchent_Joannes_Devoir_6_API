@@ -1,47 +1,81 @@
-<%- include('../layouts/main', { title: 'Nouvelle Réservation' }) %>
+<%- include('../partials/header') %>
 
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h2 class="mb-0">Nouvelle Réservation - Catway <%= catway.catwayNumber %></h2>
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-800">Nouvelle Réservation</h2>
             </div>
-            <div class="card-body">
-                <form action="/catways/<%= catway.catwayNumber %>/reservations" method="POST">
-                    <div class="mb-3">
-                        <label for="clientName" class="form-label">Nom du client</label>
-                        <input type="text" class="form-control" id="clientName" name="clientName" required
-                            value="<%= locals.reservation ? reservation.clientName : '' %>"
-                            minlength="2">
-                        <div class="form-text">Le nom doit contenir au moins 2 caractères.</div>
+            
+            <form action="/reservations" method="POST" class="p-6">
+                <div class="space-y-6">
+                    <div>
+                        <label for="clientName" class="block text-sm font-medium text-gray-700">Nom du client</label>
+                        <input type="text" 
+                               id="clientName" 
+                               name="clientName" 
+                               required
+                               minlength="2"
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <p class="mt-1 text-sm text-gray-500">Le nom doit contenir au moins 2 caractères.</p>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="boatName" class="form-label">Nom du bateau</label>
-                        <input type="text" class="form-control" id="boatName" name="boatName" required
-                            value="<%= locals.reservation ? reservation.boatName : '' %>">
+                    <div>
+                        <label for="boatName" class="block text-sm font-medium text-gray-700">Nom du bateau</label>
+                        <input type="text" 
+                               id="boatName" 
+                               name="boatName" 
+                               required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
 
-                    <div class="mb-3">
-                        <label for="startDate" class="form-label">Date de début</label>
-                        <input type="date" class="form-control" id="startDate" name="startDate" required
-                            value="<%= locals.reservation ? new Date(reservation.startDate).toISOString().split('T')[0] : '' %>"
-                            min="<%= new Date().toISOString().split('T')[0] %>">
+                    <div>
+                        <label for="catwayNumber" class="block text-sm font-medium text-gray-700">Numéro du catway</label>
+                        <select id="catwayNumber" 
+                                name="catwayNumber" 
+                                required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Sélectionnez un catway</option>
+                            <% if (locals.catways) { %>
+                                <% catways.forEach(catway => { %>
+                                    <option value="<%= catway.catwayNumber %>"><%= catway.catwayNumber %> (<%= catway.catwayType %>)</option>
+                                <% }); %>
+                            <% } %>
+                        </select>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="endDate" class="form-label">Date de fin</label>
-                        <input type="date" class="form-control" id="endDate" name="endDate" required
-                            value="<%= locals.reservation ? new Date(reservation.endDate).toISOString().split('T')[0] : '' %>"
-                            min="<%= new Date().toISOString().split('T')[0] %>">
+                    <div>
+                        <label for="startDate" class="block text-sm font-medium text-gray-700">Date de début</label>
+                        <input type="date" 
+                               id="startDate" 
+                               name="startDate" 
+                               required
+                               min="<%= new Date().toISOString().split('T')[0] %>"
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
 
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Créer la réservation</button>
-                        <a href="/catways/<%= catway.catwayNumber %>/reservations" class="btn btn-secondary">Annuler</a>
+                    <div>
+                        <label for="endDate" class="block text-sm font-medium text-gray-700">Date de fin</label>
+                        <input type="date" 
+                               id="endDate" 
+                               name="endDate" 
+                               required
+                               min="<%= new Date().toISOString().split('T')[0] %>"
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                </form>
-            </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <a href="/reservations" 
+                           class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Annuler
+                        </a>
+                        <button type="submit"
+                                class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Créer la réservation
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -63,4 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.value = startDateInput.value;
         }
     });
-});</script> 
+});
+</script>
+
+<%- include('../partials/footer') %> 

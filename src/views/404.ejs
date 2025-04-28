@@ -1,34 +1,29 @@
-<div class="container text-center py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="error-template">
-                <h1 class="display-1">404</h1>
-                <h2 class="mb-4">Page non trouvée</h2>
-                <div class="error-details mb-4">
-                    Désolé, la page que vous recherchez n'existe pas ou a été déplacée.
-                </div>
-                <div class="error-actions">
-                    <a href="/" class="btn btn-primary">
-                        <i class="bi bi-house-door"></i> Retour à l'accueil
-                    </a>
-                    <a href="javascript:history.back()" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left"></i> Page précédente
-                    </a>
-                </div>
+<%- include('partials/header') %>
+
+<div class="min-h-screen flex items-center justify-center">
+    <div class="max-w-md w-full px-6 py-8">
+        <div class="text-center">
+            <h1 class="text-9xl font-bold text-gray-800">404</h1>
+            <h2 class="mt-4 text-2xl font-semibold text-gray-600">Page non trouvée</h2>
+            <p class="mt-4 text-gray-500">
+                Désolé, la page que vous recherchez n'existe pas ou a été déplacée.
+            </p>
+            <div class="mt-8 space-x-4">
+                <a href="/" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Retour à l'accueil
+                </a>
+                <button onclick="history.back()" class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Page précédente
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<style>
-.error-template {
-    padding: 40px 15px;
-}
-.error-actions {
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-.error-actions .btn {
-    margin-right: 10px;
-}
-</style> 
+<%- include('partials/footer') %> 

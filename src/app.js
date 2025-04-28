@@ -9,9 +9,15 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const expressLayouts = require('express-ejs-layouts');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 require('dotenv').config();
+const User = require('./models/User');
 
 const app = express();
+
+// Configuration de Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Configuration de la base de données
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/port-russell', {
@@ -31,24 +37,36 @@ app.set('layout', 'layouts/main');
 app.set('layout extractScripts', true);
 app.set('layout extractStyles', true);
 
-// Configuration supplémentaire pour express-ejs-layouts
-app.locals.body = '';
-
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
+
+// Configuration de la session
 app.use(session({
     secret: process.env.SESSION_SECRET || 'secret-key',
-    resave: false,
+    resave: true,
     saveUninitialized: false,
-    cookie: { secure: process.env.NODE_ENV === 'production' }
+    cookie: {
+        secure: false, // Désactivé en développement
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000 // 24 heures
+    }
 }));
 
 // Middleware pour ajouter user aux variables locales
-app.use((req, res, next) => {
-    res.locals.user = req.session.user;
+app.use(async (req, res, next) => {
+    if (req.session.userId) {
+        try {
+            const user = await User.findById(req.session.userId).select('-password');
+            if (user) {
+                res.locals.user = user;
+            }
+        } catch (error) {
+            console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+        }
+    }
     next();
 });
 
@@ -63,9 +81,9 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/', require('./routes/index'));
-app.use('/catways', require('./routes/catways'));
 app.use('/users', require('./routes/users'));
-app.use('/catways', require('./routes/reservations'));
+app.use('/catways', require('./routes/catways'));
+app.use('/reservations', require('./routes/reservations'));
 
 // Gestion des erreurs 404
 app.use((req, res) => {

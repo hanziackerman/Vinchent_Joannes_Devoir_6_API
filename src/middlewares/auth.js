@@ -2,16 +2,28 @@
  * @fileoverview Middleware d'authentification
  */
 
+const User = require('../models/User');
+
 /**
  * Vérifie si l'utilisateur est connecté
  * @param {Object} req - Requête Express
  * @param {Object} res - Réponse Express
  * @param {Function} next - Fonction suivante
  */
-exports.isAuthenticated = (req, res, next) => {
+exports.isAuthenticated = async (req, res, next) => {
     if (req.session && req.session.userId) {
-        return next();
+        try {
+            const user = await User.findById(req.session.userId).select('-password');
+            if (user) {
+                req.user = user;
+                res.locals.user = user;
+                return next();
+            }
+        } catch (error) {
+            console.error('Erreur d\'authentification:', error);
+        }
     }
+    req.session.error = 'Veuillez vous connecter pour accéder à cette page';
     res.redirect('/login');
 };
 
@@ -37,9 +49,11 @@ exports.isNotAuthenticated = (req, res, next) => {
 exports.addUserToLocals = async (req, res, next) => {
     if (req.session && req.session.userId) {
         try {
-            const User = require('../models/User');
             const user = await User.findById(req.session.userId).select('-password');
-            res.locals.user = user;
+            if (user) {
+                req.user = user;
+                res.locals.user = user;
+            }
         } catch (error) {
             console.error('Erreur lors de la récupération de l\'utilisateur:', error);
         }
