@@ -21,8 +21,8 @@ Application web pour la gestion des réservations de catways au port de Russell.
 
 1. Cloner le dépôt :
 ```bash
-git clone [URL_DU_REPO]
-cd [NOM_DU_REPO]
+git clone https://github.com/hanziackerman/Vinchent_Joannes_Devoir_6_API.git
+cd Vinchent_Joannes_Devoir_6_API
 ```
 
 2. Installer les dépendances :
